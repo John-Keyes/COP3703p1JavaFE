@@ -1,5 +1,7 @@
 import java.util.*;
 
+// This will be replaced, we will have to create the front end in an application.
+
 public class Queries {
   public static void UserMenu() {
     int command;

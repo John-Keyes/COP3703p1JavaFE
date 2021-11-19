@@ -6,7 +6,7 @@ import java.awt.event.*;
 class UI { 
     //Declarations and initial assignments.
     static Connection conn;
-    static String querIn;  //queries are stored in this string.
+    static String querIn;  //user input is stored in this string.
     //static StringWriter errors = new StringWriter();
     static JFrame frame1 = new JFrame("G5's School Database"); // The window
     static JButton connButton = new JButton("Connect");

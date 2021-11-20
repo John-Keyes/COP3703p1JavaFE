@@ -6,11 +6,11 @@ import java.awt.event.*;
 class UI { 
     //Declarations and initial assignments.
     static Connection conn;
-    static String querIn;
+    static String querIn;  //user input is stored in this string.
     //static StringWriter errors = new StringWriter();
-    static JFrame frame1 = new JFrame("G5's School Database"); //The window
+    static JFrame frame1 = new JFrame("G5's School Database"); // The window
     static JButton connButton = new JButton("Connect");
-    static JButton sButton = new JButton("Choose Information"); //select button
+    static JButton sButton = new JButton("Select Information"); //select button
     static JButton iButton = new JButton("Add Information");    //insert button
     static JButton uButton = new JButton("Update Information"); //update button
     static JButton closeConn = new JButton("Close Connection");
@@ -21,7 +21,7 @@ class UI {
     static JButton grButton= new JButton("Get Grade Report");
     static JButton fcButton = new JButton("Find Courses");
     static JButton agButton = new JButton("Add grade");
-    static JButton submit = new JButton("Submit");
+    static JButton submit = new JButton("Submit");   //Submit Queries
     static JTextArea messOut = new JTextArea();
     static JTextArea userIn = new JTextArea();
 
@@ -133,7 +133,6 @@ class UI {
             messOut.setText("ERROR: Failed to establish a connection.");
         }
     }
-
     // Where the user can choose to select info, add info, or update info.
 
     public static void QuerySelUser() {
@@ -287,7 +286,7 @@ class UI {
         });
     }
     
-    // Submit button that stores the text in a String
+    // Submit button that stores the text in String "querIn"
 
     public static void Submit() {
         submit.addActionListener(new ActionListener() {

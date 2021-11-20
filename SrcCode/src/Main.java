@@ -1,6 +1,7 @@
 
 
 
+
 //This is the top level of the code, for easy readability and clear procedures.
 public class Main {
     public static void main(String[] args) {
@@ -11,3 +12,4 @@ public class Main {
         // Use tables to navigate through results.
     }
 }
+

@@ -30,20 +30,19 @@ class UI {
     public static void Startup() {
         frame1.setSize(1000, 800);
         frame1.setLayout(null);
-        frame1.setVisible(true);
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        connButton.setBounds(400, 800, 200, 30);
+        connButton.setBounds(400, 700, 200, 30);
         sButton.setBounds(400, 200, 200, 30);
-        iButton.setBounds(400, 400, 200, 30);
-        uButton.setBounds(400, 600, 200, 30);
+        iButton.setBounds(400, 300, 200, 30);
+        uButton.setBounds(400, 400, 200, 30);
         closeConn.setBounds(400, 700, 200, 30);
         studButton.setBounds(400, 200, 200, 30);
         depButton.setBounds(400, 300, 200, 30);
         coButton.setBounds(400, 400, 200, 30);
         csButton.setBounds(400, 500, 200, 30);
-        grButton.setBounds(400, 300, 200, 30);
-        fcButton.setBounds(400, 500, 200, 30);
-        agButton.setBounds(400, 400, 200, 30);
+        grButton.setBounds(400, 200, 200, 30);
+        fcButton.setBounds(400, 300, 200, 30);
+        agButton.setBounds(400, 200, 200, 30);
         submit.setBounds(400, 650, 200, 30);
         messOut.setBounds(300, 50, 400, 100);
         userIn.setBounds(300, 500, 400, 100);
@@ -78,6 +77,7 @@ class UI {
         csButton.setVisible(false);
         userIn.setVisible(false);
         submit.setVisible(false);
+        frame1.setVisible(true);
         messOut.setVisible(true);
     }
 
@@ -104,7 +104,6 @@ class UI {
         connButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 connButton.setVisible(false);
-                closeConn.setVisible(true);
                 messOut.setText("Connecting...");
                 ConnectToOracle();
             }
@@ -125,6 +124,7 @@ class UI {
             boolean reachable = conn.isValid(10); // After 10 seconds
             if (reachable) {
                 messOut.setText("Successfully established a connection to the database.");
+                closeConn.setVisible(true);
                 // System.out.println("Successfully established a connection to the database.");
             }
         } catch (SQLException e) { 
@@ -133,7 +133,6 @@ class UI {
             messOut.setText("ERROR: Failed to establish a connection.");
         }
     }
-
     // Where the user can choose to select info, add info, or update info.
 
     public static void QuerySelUser() {

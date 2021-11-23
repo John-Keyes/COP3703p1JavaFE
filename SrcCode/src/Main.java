@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         UI.Startup();
         UI.LoadJDBC(); // Find and load JDBC driver.
-        UI.InitConn(); // ConnectToOracle(); // Establish a connection to oracle.
+        UI.InitConn(); // Establish a connection to oracle.
         // Use tables to navigate through results.
     }
 }

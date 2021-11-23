@@ -6,7 +6,7 @@ import java.awt.event.*;
 class UI { 
     //Declarations and initial assignments.
     static Connection conn;
-    static String querIn;  //user input is stored in this string.
+    static String querIn = "";  //user input is stored in this string.
     //static StringWriter errors = new StringWriter();
     static JFrame frame1 = new JFrame("G5's School Database"); // The window
     static JButton connButton = new JButton("Connect");
@@ -84,25 +84,22 @@ class UI {
     public static void LoadJDBC() {
         boolean valid = true;
         try {
-            //System.out.println("Loading jdbc driver...");
             messOut.setText("Loading jdbc driver...");
             Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (ClassNotFoundException e) { 
             valid = false;
             e.printStackTrace();
-            //System.out.println("ERROR: Could not load jdbc driver.");
-            messOut.setText("ERROR: Could not load jdbc driver.");
+            messOut.setText("ERROR: Could not load jdbc driver.\nSee terminal for details.");
         }
         if (valid) {
             messOut.setText("Driver Loaded.");
-            // System.out.println("Driver Loaded.");
         }
     }
 
     public static void InitConn() {
         connButton.setVisible(true);
         connButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent a) {
                 connButton.setVisible(false);
                 messOut.setText("Connecting...");
                 ConnectToOracle();
@@ -112,7 +109,7 @@ class UI {
 
     // Connecting to oracle based on our class and group info.
 
-    public static void ConnectToOracle() {
+    public static int ConnectToOracle() {
         String serverName = "cisvm-oracle.unfcsd.unf.edu";
         String portNumber = "1521";
         String sid = "orcl";
@@ -125,58 +122,57 @@ class UI {
             if (reachable) {
                 messOut.setText("Successfully established a connection to the database.");
                 closeConn.setVisible(true);
-                // System.out.println("Successfully established a connection to the database.");
+                QuerySelUser();
             }
         } catch (SQLException e) { 
             e.printStackTrace();
-            // System.out.println("ERROR: Failed to establish a connection.");
-            messOut.setText("ERROR: Failed to establish a connection.");
+            CloseConn();
+            messOut.setText("ERROR: Failed to establish a connection.\nSee terminal for details.");
         }
+        return 0;
     }
     // Where the user can choose to select info, add info, or update info.
 
     public static void QuerySelUser() {
-        sButton.setVisible(true);
+        messOut.setText("Select, Add, or Update information in our database.");
+        sButton.setVisible(true); //This works
         iButton.setVisible(true);
         uButton.setVisible(true);
         sButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sButton.setVisible(false);
+            public void actionPerformed(ActionEvent b) {
+                sButton.setVisible(false); //This does not work
                 iButton.setVisible(false);
                 uButton.setVisible(false);
                 sInput();
                 Queries.SelectQuery();
                 //OutInfo();
-                QuerySelUser();
             }
         });
 
         iButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent b) {
                 sButton.setVisible(false);
                 iButton.setVisible(false);
                 uButton.setVisible(false);
                 iInput();
                 Queries.InsertQuery();
                 //OutInfo();
-                QuerySelUser();
             }
         });
 
         uButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent b) {
                 sButton.setVisible(false);
                 iButton.setVisible(false);
                 uButton.setVisible(false);
                 uInput();
                 Queries.UpdateQuery();
                 //OutInfo();
-                QuerySelUser();
             }
         });
 
         closeConn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent b) {
                 sButton.setVisible(false);
                 iButton.setVisible(false);
                 uButton.setVisible(false);
@@ -191,7 +187,7 @@ class UI {
         fcButton.setVisible(true);
         messOut.setText("Would you like to generate a student's grade report \nor find the available courses in a department.");
         grButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 grButton.setVisible(false);
                 fcButton.setVisible(false);
                 messOut.setText("Enter a student's N-number to generate \ntheir grade report.");
@@ -201,7 +197,7 @@ class UI {
             }
         });
         fcButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 grButton.setVisible(false);
                 fcButton.setVisible(false);
                 messOut.setText("Enter the department name or code to \nfind the courses they offer.");
@@ -222,19 +218,19 @@ class UI {
         csButton.setVisible(true);
         messOut.setText("Would you like to add a student, department, course, or course section.");
         studButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
                 depButton.setVisible(false);
                 coButton.setVisible(false);
                 csButton.setVisible(false);
-                messOut.setText("Add a student with all of its component with this format: \n<first name,last name,Nnumber,SSN,Bdate,Class,Degree program,\nCurrent Phone Number,Current Address,Permanent Phone Number,Permanent street,\nPermanent city,Permanent State,Permanent Zip> ");
+                messOut.setText("Add a student with all of its component with this format: \n<first name,last name,Nnumber,SSN,Bdate,Class,Degree program,\nCurrent Phone Number,Current Address,Permanent Phone Number,\nPermanent street,Permanent city,Permanent State,\nPermanent Zip> ");
                 userIn.setVisible(true);
                 submit.setVisible(true);
                 Submit();
             }
         });
         depButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
                 depButton.setVisible(false);
                 coButton.setVisible(false);
@@ -246,7 +242,7 @@ class UI {
             }
         }); 
         coButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
                 depButton.setVisible(false);
                 coButton.setVisible(false);
@@ -258,7 +254,7 @@ class UI {
             }
         }); 
         csButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
                 depButton.setVisible(false);
                 coButton.setVisible(false);
@@ -277,7 +273,7 @@ class UI {
         agButton.setVisible(true);
         messOut.setText("Add a grade to a given student based on the course section");
         agButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent c) {
                 agButton.setVisible(false);
                 userIn.setVisible(true);
                 submit.setVisible(true);
@@ -290,11 +286,12 @@ class UI {
 
     public static void Submit() {
         submit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent d) {
                 messOut.setText("Submitted");
                 querIn = userIn.getText();  //Input from userIn stored in querIn.
                 submit.setVisible(false);
                 userIn.setVisible(false);
+                QuerySelUser();
             }
         });     
     }
@@ -308,17 +305,32 @@ class UI {
     // Closing the connection based on whether the "closeConn" button was clicked.
 
     public static void CloseConn() {
+        boolean valid = true;
         try {
-            // System.out.println("Attempting to close the connection.");
             messOut.setText("Attempting to close the connection...");
             conn.close();
         } catch (Exception e) {
+            valid = false;
             e.printStackTrace();
-            // System.out.println("ERROR: Could not close the connection.");
-            messOut.setText("ERROR: Could not close the connection.");
+            messOut.setText("ERROR: Could not close the connection.\nSee terminal for details.");
         }
-        // System.out.println("Connection closed.");
-        messOut.setText("Connection closed.");
+        if(valid) {
+            sButton.setVisible(false);
+            iButton.setVisible(false);
+            uButton.setVisible(false);
+            closeConn.setVisible(false);
+            grButton.setVisible(false);
+            fcButton.setVisible(false);
+            agButton.setVisible(false);
+            studButton.setVisible(false);
+            depButton.setVisible(false);
+            coButton.setVisible(false);
+            csButton.setVisible(false);
+            userIn.setVisible(false);
+            submit.setVisible(false);
+            messOut.setText("Connection closed.");
+            InitConn();
+        }
     }
 
 }

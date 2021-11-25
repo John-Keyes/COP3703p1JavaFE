@@ -6,7 +6,7 @@ import java.awt.event.*;
 class UI { 
     //Declarations and initial assignments.
     static Connection conn;
-    static String querIn = "";  //user input is stored in this string.
+    static String querIn = null;  //user input is stored in this string.
     //static StringWriter errors = new StringWriter();
     static JFrame frame1 = new JFrame("G5's School Database"); // The window
     static JButton connButton = new JButton("Connect");
@@ -24,6 +24,8 @@ class UI {
     static JButton submit = new JButton("Submit");   //Submit Queries
     static JTextArea messOut = new JTextArea();
     static JTextArea userIn = new JTextArea();
+    //static JScrollPane scrollMsg = new JScrollPane(messOut);
+    //static JScrollPane scrollInput = new JScrollPane(userIn);
 
     //Dimensions of the window and its components with their initial properties.
      
@@ -44,8 +46,8 @@ class UI {
         fcButton.setBounds(400, 300, 200, 30);
         agButton.setBounds(400, 200, 200, 30);
         submit.setBounds(400, 650, 200, 30);
-        messOut.setBounds(300, 50, 400, 100);
-        userIn.setBounds(300, 500, 400, 100);
+        messOut.setBounds(100,50,800,100); //(300, 50, 400, 100);
+        userIn.setBounds(100,500,800,100); //(300, 500, 400, 100);
         messOut.setEditable(false);
         userIn.setEditable(true);
         frame1.add(sButton);
@@ -144,7 +146,7 @@ class UI {
                 iButton.setVisible(false);
                 uButton.setVisible(false);
                 sInput();
-                Queries.SelectQuery();
+//                Queries.SelectQuery();
                 //OutInfo();
             }
         });
@@ -155,7 +157,7 @@ class UI {
                 iButton.setVisible(false);
                 uButton.setVisible(false);
                 iInput();
-                Queries.InsertQuery();
+//                Queries.InsertQuery();
                 //OutInfo();
             }
         });
@@ -166,7 +168,7 @@ class UI {
                 iButton.setVisible(false);
                 uButton.setVisible(false);
                 uInput();
-                Queries.UpdateQuery();
+//                Queries.UpdateQuery();
                 //OutInfo();
             }
         });
@@ -180,12 +182,13 @@ class UI {
                 CloseConn();
             }
         });
-    }
+    }//homepage
+    
     // User can either generate a grade report or find courses.
     public static void sInput() {
         grButton.setVisible(true);
         fcButton.setVisible(true);
-        messOut.setText("Would you like to generate a student's grade report \nor find the available courses in a department.");
+        messOut.setText("Would you like to generate a student's grade report \nor find the available courses in a department?");
         grButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent c) {
                 grButton.setVisible(false);
@@ -206,7 +209,7 @@ class UI {
                 Submit();
             }
         }); 
-    }
+    }//select information
 
     /*This function displays buttons that indicate what information we want to add to a particular table.
       The user will then enter each attribute separated by a comma.
@@ -216,31 +219,90 @@ class UI {
         depButton.setVisible(true);
         coButton.setVisible(true);
         csButton.setVisible(true);
-        messOut.setText("Would you like to add a student, department, course, or course section.");
+        messOut.setText("Would you like to add a student, department, course, or course section?");
         studButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
                 depButton.setVisible(false);
                 coButton.setVisible(false);
                 csButton.setVisible(false);
-                messOut.setText("Add a student with all of its component with this format: \n<first name,last name,Nnumber,SSN,Bdate,Class,Degree program,\nCurrent Phone Number,Current Address,Permanent Phone Number,\nPermanent street,Permanent city,Permanent State,\nPermanent Zip> ");
+                messOut.setText("Add a student with all of its component with this format: \nfirst name,last name,Nnumber,SSN,Bdate(in the form \nYYYY-MM-DD),Sex,Class,Degree program,\nCurrent Phone Number,Current Address,Permanent Phone Number,\nPermanent street,Permanent city,Permanent State,\nPermanent Zip");
                 userIn.setVisible(true);
                 submit.setVisible(true);
-                Submit();
+                //Submit();
+                
+                //after submitting input, generate query
+                submit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent insertStudent) {
+                        messOut.setText("Submitted");
+                        String sInfo = userIn.getText();  //Input from userIn stored in querIn.
+                        String[] studentParams = sInfo.split(","); //parse querIn to get separate values
+                        for(int i=0; i< studentParams.length; i++)
+                        	System.out.println(studentParams[i]);
+                        //prepare statement to add department
+                        String studentInfo = "INSERT INTO STUDENT VALUES (?,?,?,?,TO_DATE(?,'YYYY-MM-DD'),?,?,?,?,?,?,?,?,?,?)";
+                        try {
+							PreparedStatement addStudent = conn.prepareStatement(studentInfo);
+							for(int i = 1; i < 16; i++)
+								addStudent.setString(i, studentParams[i-1]);
+							addStudent.execute();
+							addStudent.close();
+						} catch (SQLException e) {
+							messOut.setText("Couldn't add student.");
+							e.printStackTrace();
+						}//try-catch
+                        //querIn = null;
+                        userIn.setText(null);
+                        submit.setVisible(false);
+                        userIn.setVisible(false);
+                        QuerySelUser();
+                    }
+                }); 
             }
         });
+        
+        //add department
         depButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
                 depButton.setVisible(false);
                 coButton.setVisible(false);
                 csButton.setVisible(false);
-                messOut.setText("Add a Department with this format: \n<Name,Code,Office number,Office phone,College>");
+                messOut.setText("Add a Department with this format: \nName,Code,Office number,Office phone,College");
                 userIn.setVisible(true);
                 submit.setVisible(true);
-                Submit();
+                //Submit();
+                //after submitting input, generate query
+                submit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent insertDept) {
+                        messOut.setText("Submitted");
+                        String dInfo = userIn.getText();  //Input from userIn stored in querIn.
+                        String[] dParams = dInfo.split(","); //parse querIn to get separate values
+                        for(int i=0; i< dParams.length; i++)
+                        	System.out.println(dParams[i]);
+                        //prepare statement to add department
+                        String deptInfo = "INSERT INTO DEPARTMENT VALUES (?,?,?,?,?)";
+                        try {
+							PreparedStatement addDept = conn.prepareStatement(deptInfo);
+							for(int i = 1; i < 6; i++)
+								addDept.setString(i, dParams[i-1]);
+							addDept.executeUpdate();
+							addDept.close();
+						} catch (SQLException e) {
+							messOut.setText("Couldn't add department.");
+							e.printStackTrace();
+						}//try-catch
+                        //querIn = null;
+                        userIn.setText(null);
+                        submit.setVisible(false);
+                        userIn.setVisible(false);
+                        QuerySelUser();
+                    }
+                }); 
             }
-        }); 
+        });//add department
+        
+        //add course
         coButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
@@ -252,7 +314,9 @@ class UI {
                 submit.setVisible(true);
                 Submit();
             }
-        }); 
+        });//add course
+        
+        //add section
         csButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent c) {
                 studButton.setVisible(false);
@@ -264,8 +328,9 @@ class UI {
                 submit.setVisible(true);
                 Submit();
             }
-        });     
-    }
+        });//add section
+        
+    }//add information
 
     // This is the user input for adding a grade to an existing student. (UPDATE SQL)
 
@@ -299,7 +364,6 @@ class UI {
     //This is where the output should be displayed
 
     /*public static void OutInfo() {
-
     }*/
 
     // Closing the connection based on whether the "closeConn" button was clicked.

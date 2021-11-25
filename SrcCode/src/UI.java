@@ -237,15 +237,17 @@ class UI {
                         messOut.setText("Submitted");
                         String sInfo = userIn.getText();  //Input from userIn stored in querIn.
                         String[] studentParams = sInfo.split(","); //parse querIn to get separate values
-                        for(int i=0; i< studentParams.length; i++)
+                        for(int i=0; i< studentParams.length; i++) {
                         	System.out.println(studentParams[i]);
+                        }
                         //prepare statement to add department
                         String studentInfo = "INSERT INTO STUDENT VALUES (?,?,?,?,TO_DATE(?,'YYYY-MM-DD'),?,?,?,?,?,?,?,?,?,?)";
                         try {
 							PreparedStatement addStudent = conn.prepareStatement(studentInfo);
-							for(int i = 1; i < 16; i++)
+							for(int i = 1; i < 16; i++) {
 								addStudent.setString(i, studentParams[i-1]);
-							addStudent.execute();
+                            }
+                            addStudent.executeUpdate();
 							addStudent.close();
 						} catch (SQLException e) {
 							messOut.setText("Couldn't add student.");
@@ -278,16 +280,18 @@ class UI {
                         messOut.setText("Submitted");
                         String dInfo = userIn.getText();  //Input from userIn stored in querIn.
                         String[] dParams = dInfo.split(","); //parse querIn to get separate values
-                        for(int i=0; i< dParams.length; i++)
+                        for(int i = 0; i < dParams.length; i++) {
                         	System.out.println(dParams[i]);
+                        }
                         //prepare statement to add department
                         String deptInfo = "INSERT INTO DEPARTMENT VALUES (?,?,?,?,?)";
                         try {
 							PreparedStatement addDept = conn.prepareStatement(deptInfo);
-							for(int i = 1; i < 6; i++)
+							for(int i = 1; i < 6; i++) {
 								addDept.setString(i, dParams[i-1]);
-							addDept.executeUpdate();
-							addDept.close();
+                            }
+                            addDept.executeUpdate();
+							    addDept.close();
 						} catch (SQLException e) {
 							messOut.setText("Couldn't add department.");
 							e.printStackTrace();

@@ -199,14 +199,58 @@ class UI {
                 Submit();
             }
         });
+
+        //Display courses offered by given department
         fcButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent c) {
                 grButton.setVisible(false);
                 fcButton.setVisible(false);
-                messOut.setText("Enter the department name or code to \nfind the courses they offer.");
+                messOut.setText("Enter the department name or code to find the courses they offer.");
                 userIn.setVisible(true);
                 submit.setVisible(true);
-                Submit();
+                
+                submit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent viewCourses) {
+                        //messOut.setText("Submitted");
+                        
+                        String deptID = userIn.getText(); //store input from userIn
+                        String getCoursesStmt = "SELECT Dept_name, Course_name, Course_number "
+                        + "FROM DEPARTMENT D, COURSE C "
+                        + "WHERE D.Dept_code=C.Course_dept AND (D.Dept_name=? OR D.Dept_code=?)";    
+
+                        //try to execte statement
+                        try {
+                            PreparedStatement getCourses = conn.prepareStatement(getCoursesStmt);
+                            getCourses.setString(1, deptID);
+                            getCourses.setString(2, deptID);
+                            ResultSet courseResultSet = getCourses.executeQuery();
+                            String dName;
+                            String cName;
+                            String cNum;
+                            String courseResults = "";
+
+                            while(courseResultSet.next()) {
+                                dName = courseResultSet.getString("Dept_name");
+                                cName = courseResultSet.getString("Course_name");
+                                cNum = courseResultSet.getString("Course_number");
+                                courseResults += "Department Name: " + dName + "\n";
+                                courseResults += "Course Name: " + cName + "\n";
+                                courseResults += "Course Number: " + cNum + "\n\n";
+                            }
+
+                            messOut.setText(courseResults);
+                        } catch (SQLException e) {
+                            messOut.setText("Couldn't get courses.");
+							e.printStackTrace();
+                        }//try-catch
+
+                        submit.setVisible(false);
+                        userIn.setVisible(false);
+
+                        //TODO need to give option to go back to main menu after done looking at results
+                        //QuerySelUser(); //currently stops at this point w/o options other than closeConnection so we can see results
+                    }
+                });
             }
         }); 
     }//select information
@@ -251,34 +295,34 @@ class UI {
                         String hasMajor = "INSERT INTO HAS_MAJOR VALUES (?,?,?)";
                         String hasMinor = "INSERT INTO HAS_MINOR VALUES (?,?,?)";
                         try {
-				PreparedStatement addStudent = conn.prepareStatement(studentInfo);
-				for(int i = 1; i < 16; i++) {
-					addStudent.setString(i, studentParams[i-1]);
+							PreparedStatement addStudent = conn.prepareStatement(studentInfo);
+							for(int i = 1; i < 16; i++) {
+								addStudent.setString(i, studentParams[i-1]);
                             }//for() student info
 
-				PreparedStatement addMajor = conn.prepareStatement(hasMajor);
-				addMajor.setString(1, studentParams[2]);
-				addMajor.setString(2, studentParams[15]);
-				addMajor.setString(3, studentParams[16]);
+                            PreparedStatement addMajor = conn.prepareStatement(hasMajor);
+                            addMajor.setString(1, studentParams[2]);
+                            addMajor.setString(2, studentParams[15]);
+                            addMajor.setString(3, studentParams[16]);
 
-				PreparedStatement addMinor = conn.prepareStatement(hasMinor);
-				addMinor.setString(1, studentParams[2]);
-				addMinor.setString(2, studentParams[17]);
-				addMinor.setString(3, studentParams[18]);
+                            PreparedStatement addMinor = conn.prepareStatement(hasMinor);
+                            addMinor.setString(1, studentParams[2]);
+                            addMinor.setString(2, studentParams[17]);
+                            addMinor.setString(3, studentParams[18]);
 
-				addStudent.executeUpdate(); //add student info
+                            addStudent.executeUpdate(); //add student info
 							addStudent.close();
-				addMajor.executeUpdate(); //add student's major
-				addMajor.close();
-				addMinor.executeUpdate(); //add student's minor
-				addMinor.close();
+                            addMajor.executeUpdate(); //add student's major
+                            addMajor.close();
+                            addMinor.executeUpdate(); //add student's minor
+                            addMinor.close();
 
-			} catch (SQLException e) {
-				messOut.setText("Couldn't add student.");
-				e.printStackTrace();
-			} catch (ArrayIndexOutOfBoundsException e) {
-
-			}//try-catch
+						} catch (SQLException e) {
+							messOut.setText("Couldn't add student.");
+							e.printStackTrace();
+						} catch (ArrayIndexOutOfBoundsException e) {
+							
+						}//try-catch
                         //querIn = null;
                         userIn.setText(null);
                         submit.setVisible(false);
@@ -306,22 +350,24 @@ class UI {
                         messOut.setText("Submitted");
                         String dInfo = userIn.getText();  //Input from userIn stored in dInfo
                         String[] dParams = dInfo.split(","); //parse dInfo to get separate values
-                        for(int i = 0; i < dParams.length; i++) {
-                        	System.out.println(dParams[i]);
-                        }
+                        
+                        // for(int i = 0; i < dParams.length; i++) {
+                        // 	System.out.println(dParams[i]);
+                        // }
+
                         //prepare statement to add department
                         String deptInfo = "INSERT INTO DEPARTMENT VALUES (?,?,?,?,?)";
                         try {
-				PreparedStatement addDept = conn.prepareStatement(deptInfo);
-				for(int i = 0; i < 5; i++) {
-					addDept.setString((i+1), dParams[i]);
-				}
-                            	addDept.executeUpdate();
-				addDept.close();
-			} catch (SQLException e) {
-				messOut.setText("Couldn't add department.");
-				e.printStackTrace();
-			}//try-catch
+							PreparedStatement addDept = conn.prepareStatement(deptInfo);
+							for(int i = 0; i < 5; i++) {
+								addDept.setString((i+1), dParams[i]);
+                            }
+                            addDept.executeUpdate();
+						        addDept.close();
+						} catch (SQLException e) {
+							messOut.setText("Couldn't add department.");
+							e.printStackTrace();
+						}//try-catch
 
                         userIn.setText(null);
                         submit.setVisible(false);
@@ -357,17 +403,17 @@ class UI {
                         //prepare statement to add course
                         String courseInfo = "INSERT INTO COURSE VALUES (?,?,?,?,?,?)";
                         try {
-				PreparedStatement addCourse = conn.prepareStatement(courseInfo);
-				for(int i = 0; i < 5; i++) {
-					addCourse.setString((i+1), cParams[i]);
-				}//for() course info to sql update (first 5 params, Strings)
-				addCourse.setInt(6, Integer.parseInt(cParams[5])); //credit hours param (int)
-				addCourse.executeUpdate();
-				addCourse.close();
-			} catch (SQLException e) {
-				messOut.setText("Couldn't add course.");
-				e.printStackTrace();
-			}//try-catch
+							PreparedStatement addCourse = conn.prepareStatement(courseInfo);
+							for(int i = 0; i < 5; i++) {
+								addCourse.setString((i+1), cParams[i]);
+                            }//for() course info to sql update (first 5 params, Strings)
+                            addCourse.setInt(6, Integer.parseInt(cParams[5])); //credit hours param (int)
+                            addCourse.executeUpdate();
+							addCourse.close();
+						} catch (SQLException e) {
+							messOut.setText("Couldn't add course.");
+							e.printStackTrace();
+						}//try-catch
                         
                         userIn.setText(null);
                         submit.setVisible(false);
@@ -401,16 +447,16 @@ class UI {
                         //prepare statement to add section
                         String sectionInfo = "INSERT INTO COURSE_SECTION VALUES (?,?,?,?,?)";
                         try {
-				PreparedStatement addSection = conn.prepareStatement(sectionInfo);
-				for(int i = 0; i < 5; i++) {
-					addSection.setString((i+1), csParams[i]);
-				}//for() course section info to sql params
-				addSection.executeUpdate();
-				addSection.close();
-			} catch (SQLException e) {
-				messOut.setText("Couldn't add course section.");
-				e.printStackTrace();
-			}//try-catch
+							PreparedStatement addSection = conn.prepareStatement(sectionInfo);
+							for(int i = 0; i < 5; i++) {
+								addSection.setString((i+1), csParams[i]);
+                            }//for() course section info to sql params
+                            addSection.executeUpdate();
+							addSection.close();
+						} catch (SQLException e) {
+							messOut.setText("Couldn't add course section.");
+							e.printStackTrace();
+						}//try-catch
                         
                         userIn.setText(null);
                         submit.setVisible(false);
@@ -425,7 +471,8 @@ class UI {
 
     // This is the user input for adding a grade to an existing student.
 
-    public static void uInput() { //add grade
+    //add grade
+    public static void uInput() { 
         agButton.setVisible(true);
         messOut.setText("Add a grade to a given student based on the course section");
         agButton.addActionListener(new ActionListener() {
@@ -450,9 +497,9 @@ class UI {
 				for(int i = 0; i < 7; i++) {
 					addGrade.setString((i+1), gParams[i]);
 				}//for() grade info to sql params (first 6, all Strings)
-				addGrade.setInt(7, Integer.parseInt(gParams[6])); //last param, number grade
+                            	addGrade.setInt(7, Integer.parseInt(gParams[6])); //last param, number grade
 
-				addGrade.executeUpdate();
+                            	addGrade.executeUpdate();
 				addGrade.close();
 			} catch (SQLException e) {
 				messOut.setText("Couldn't add grade.");
@@ -465,9 +512,9 @@ class UI {
                         QuerySelUser();
                     }//execute grade insert
                 });//submit entered grade info
-            }
-        });
-    }
+            }//display input box
+        });//add grade chosen
+    }//add grade
     
     // Submit button that stores the text in String "querIn"
     // prob don't need this anymore 

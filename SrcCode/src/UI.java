@@ -4,6 +4,7 @@ import java.awt.event.*;
 //import java.io.StringWriter;
 
 class UI { 
+
     //Declarations and initial assignments.
     static Connection conn;
     static String querIn = null;  //user input is stored in this string.
@@ -15,7 +16,7 @@ class UI {
     static JButton uButton = new JButton("Update Information"); //update button
     static JButton closeConn = new JButton("Close Connection");
     static JButton studButton = new JButton("Student");
-    static JButton depButton = new JButton("Deparment");
+    static JButton depButton = new JButton("Department");
     static JButton coButton = new JButton("Course");
     static JButton csButton = new JButton("Course Section");
     static JButton grButton= new JButton("Get Grade Report");
@@ -27,8 +28,13 @@ class UI {
     //static JScrollPane scrollMsg = new JScrollPane(messOut);
     //static JScrollPane scrollInput = new JScrollPane(userIn);
 
+    //main function
+    public static void main(String[] args) {
+        UI.Startup();
+        UI.LoadJDBC(); 
+    }
+
     //Dimensions of the window and its components with their initial properties.
-     
     public static void Startup() {
         frame1.setSize(1000, 800);
         frame1.setLayout(null);
@@ -95,11 +101,13 @@ class UI {
         }
         if (valid) {
             messOut.setText("Driver Loaded.");
+            InitConn();
         }
     }
 
     public static void InitConn() {
         connButton.setVisible(true);
+        messOut.setText("Initiate Connection.");
         connButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent a) {
                 connButton.setVisible(false);

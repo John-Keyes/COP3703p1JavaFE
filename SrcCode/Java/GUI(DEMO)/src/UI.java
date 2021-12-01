@@ -2,7 +2,7 @@ import javax.swing.*;
 //import java.io.StringWriter;
 
 /**
- * UI class is where everything in the UI is declared.
+ * UI class is where all the buttons, frames, and their parameters are declared
  */
 
 class UI { 
@@ -219,7 +219,7 @@ class UI {
         argLab4.setText("SSN");
         arg4.setVisible(true);
         argLab5.setVisible(true);
-        argLab5.setText("Bdate(YYYYMMDD)");
+        argLab5.setText("Bdate(YYYY-MM-DD)");
         arg5.setVisible(true);
         argLab6.setVisible(true);
         argLab6.setText("Sex");
@@ -480,6 +480,7 @@ class UI {
         arg19.setVisible(false);
         arg19.setText(null);
         out.setText(null);
+        out.setVisible(false);
     }
 
     public static void ShowButtons() {
@@ -574,5 +575,15 @@ class UI {
         arg14.setVisible(false);
         argLab15.setVisible(false);
         arg15.setVisible(false);
+    }
+    public static void HideStud2Args() {
+        argLab16.setVisible(false);
+        arg16.setVisible(false);
+        argLab17.setVisible(false);
+        arg17.setVisible(false);
+        argLab18.setVisible(false);
+        arg18.setVisible(false);
+        argLab19.setVisible(false);
+        arg19.setVisible(false);
     }
 }

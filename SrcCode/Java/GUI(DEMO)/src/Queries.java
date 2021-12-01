@@ -10,7 +10,10 @@ public class Queries {
     public static void addDepartment(Connection conn, String dParams[]) throws SQLException {
         
         //write SQL statement
-        String addDeptQ = "INSERT INTO DEPARTMENT VALUES (?,?,?,?,?)";
+        try {
+            try {
+        String addDeptQ = null;
+        addDeptQ = "INSERT INTO DEPARTMENT VALUES (?,?,?,?,?)";
             //prepare statement
             PreparedStatement addDept = null;
             addDept = conn.prepareStatement(addDeptQ);
@@ -27,15 +30,31 @@ public class Queries {
             //print result
             System.out.println("\nDepartment " + dParams[0] +" added.");
             Main.OutInfo("\nDepartment " + dParams[0] +" added.");
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
         //System.out.println(dInfo); //for testing
     }//addDepartment()
 
     public static void addStudent(Connection conn,  String[] sParams) throws SQLException {
 
         //write statements to add student (student info, major, minor)
-        String studentQ = "INSERT INTO STUDENT VALUES (?,?,?,?,TO_DATE(?,'YYYY-MM-DD'),?,?,?,?,?,?,?,?,?,?)";
-        String hasMajorQ = "INSERT INTO HAS_MAJOR VALUES (?,?,?)";
-        String hasMinorQ = "INSERT INTO HAS_MINOR VALUES (?,?,?)";
+        try {
+            try {
+        String studentQ = null;
+        studentQ = "INSERT INTO STUDENT VALUES (?,?,?,?,TO_DATE(?,'YYYY-MM-DD'),?,?,?,?,?,?,?,?,?,?)";
+        String hasMajorQ = null;
+        hasMajorQ = "INSERT INTO HAS_MAJOR VALUES (?,?,?)";
+        String hasMinorQ = null;
+        hasMinorQ = "INSERT INTO HAS_MINOR VALUES (?,?,?)";
             PreparedStatement addStudent = null;
             PreparedStatement addMajor = null;
             PreparedStatement addMinor = null;
@@ -61,10 +80,24 @@ public class Queries {
             addMinor.close();
             System.out.println("\nStudent " + sParams[2] + " added.");
             Main.OutInfo("\nStudent " + sParams[2] + " added.");
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
     }//addStudent()
 
     public static void addCourse(Connection conn, String cParams[]) throws SQLException  {
-        String addCourseQ = "INSERT INTO COURSE VALUES (?,?,?,?,?,?)";
+        try {
+            try {
+        String addCourseQ = null;
+        addCourseQ = "INSERT INTO COURSE VALUES (?,?,?,?,?,?)";
         PreparedStatement insCourse = null;
             insCourse = conn.prepareStatement(addCourseQ);
             for(int i = 0; i < 5; i++) {
@@ -76,11 +109,25 @@ public class Queries {
 
             System.out.println("\nCourse " + cParams[1] + " added.");
             Main.OutInfo("\nCourse " + cParams[1] + " added.");
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
 
     }//addCourse()
 
     public static void addSection(Connection conn, String csParams[])  throws SQLException {
-        String addSectionQ = "INSERT INTO COURSE_SECTION VALUES (?,?,?,?,?)";
+        try {
+            try {
+        String addSectionQ = null;
+        addSectionQ = "INSERT INTO COURSE_SECTION VALUES (?,?,?,?,?)";
         PreparedStatement addCSec = null;
             addCSec = conn.prepareStatement(addSectionQ);
             for(int i = 0; i < 5; i++) {
@@ -92,10 +139,24 @@ public class Queries {
                 + csParams[1] + " added for " + csParams[4] + " " + csParams[3]);
                 Main.OutInfo("\nCourse section " + csParams[0] + "-"
                 + csParams[1] + " added for " + csParams[4] + " " + csParams[3]);
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
     }//addSection()
 
     public static void addGrade(Connection conn, String gParams[]) throws SQLException  {
-        String addGradeQ = "INSERT INTO ENROLLS_IN VALUES (?,?,?,?,?,?,?)";
+        try {
+            try {
+        String addGradeQ = null;
+        addGradeQ = "INSERT INTO ENROLLS_IN VALUES (?,?,?,?,?,?,?)";
         PreparedStatement insGrade = null;
             insGrade = conn.prepareStatement(addGradeQ);
             for(int i = 0; i < 6; i++) {
@@ -106,30 +167,47 @@ public class Queries {
             insGrade.close();
             System.out.println("\nGrade added for " + gParams[0] + " - " + gParams[1]);
             Main.OutInfo("\nGrade added for " + gParams[0] + " - " + gParams[1]);
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
     }//addGrade()
 
     public static void getGradeReport(Connection conn, String nNumber) throws SQLException {
-        
-        //print student info
-        printStudentInfoGR(conn,nNumber);
-        
-        //print enrollments
-        printCoursesGR(conn,nNumber);
-
-        //calculate and print GPA
-        printGPA(conn,nNumber);
-        
+        try {
+            try {
+        String allInfo = printStudentInfoGR(conn,nNumber) + printCoursesGR(conn,nNumber) + printGPA(conn,nNumber);
+        System.out.print(allInfo);
+        Main.OutInfo(allInfo);
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
     }//getGradeReport()
 
-    public static void printStudentInfoGR(Connection conn, String n) throws SQLException  {
-        String sInfo = "";
-        String stInfoQ = "SELECT Fname,Lname,Nnumber,Degree_prog,Class,Major_name,Minor_name,Bdate "
+    public static String printStudentInfoGR(Connection conn, String n) throws SQLException  {
+        String sInfo = null;
+        sInfo = "";
+        String stInfoQ = null;
+        stInfoQ = "SELECT Fname,Lname,Nnumber,Degree_prog,Class,Major_name,Minor_name,Bdate "
         + "FROM STUDENT,HAS_MAJOR,HAS_MINOR "
         + "WHERE Nnumber=has_major.nnum AND Nnumber=has_minor.nnum AND Nnumber=?";
-
-        System.out.println("\n-------------------------");
-        System.out.println("STUDENT INFORMATION");
-        System.out.println("-------------------------");
+        String sInarg1 = null;
+        sInarg1 = "\n-------------------------\nSTUDENT INFORMATION\n-------------------------\n";
             PreparedStatement stmt = null;
             stmt = conn.prepareStatement(stInfoQ);
             stmt.setString(1, n);
@@ -151,21 +229,21 @@ public class Queries {
                 else if(cl == 6)
                     clName = "Doctor";
 
-                sInfo = "NAME:  " + rSet.getString(1) + " " + rSet.getString(2) + "\n"
+                sInfo = sInarg1 + "NAME:  " + rSet.getString(1) + " " + rSet.getString(2) + "\n"
                 + "N#:    " + rSet.getString(3) + "\n"
                 + "BDATE: " + rSet.getString(8) + "\n"
                 + "DEGREE PROGRAM: " + rSet.getString(4) + "\n"
                 + "CLASS: " + clName + "\n"
                 + "MAJOR: " + rSet.getString(6) + "\n"
-                + "MINOR: " + rSet.getString(7);
+                + "MINOR: " + rSet.getString(7) + "\n";
             }//while()
 
-            System.out.println(sInfo);
-            Main.OutInfo(sInfo + "\n\n");
+            //System.out.print(sInfo);
+            return sInfo;
 
     }//printStudentInfoGR()
 
-    public static void printGPA(Connection conn, String nNumber) throws SQLException  {
+    public static String printGPA(Connection conn, String nNumber) throws SQLException  {
         int CH = 0;
         double GP = 0.0;
         double qualityPoints = 0.0;
@@ -175,9 +253,11 @@ public class Queries {
         double gpa = 0.0;
 
 
-        String getCreditHrsQ = "SELECT Credit_hrs, Grade_point FROM COURSE, ENROLLS_IN WHERE Course_number=Cnum AND Nnum=?";
+        String getCreditHrsQ = null;
+        getCreditHrsQ = "SELECT Credit_hrs, Grade_point FROM COURSE, ENROLLS_IN WHERE Course_number=Cnum AND Nnum=?";
 
-            PreparedStatement getHrs = conn.prepareStatement(getCreditHrsQ);
+            PreparedStatement getHrs = null;
+            getHrs = conn.prepareStatement(getCreditHrsQ);
             getHrs.setString(1, nNumber);
             ResultSet hrsResults = getHrs.executeQuery();
             while(hrsResults.next()) {
@@ -189,25 +269,33 @@ public class Queries {
             }//while()
             gpa = totalPoints / hours;
             
-            String arg1 = String.valueOf(gpa);
-            String arg2 = String.valueOf(hours);
+            String arg1 = null;
+            arg1 = String.valueOf(gpa);
+            String arg2 = null;
+            arg2 = String.valueOf(hours);
             //System.out.println("\n" + hours + " credit hours");
-            String gotGPA = "\n" + arg2 + "credit hours\n" + "------------------------- GPA: \n"+  arg1 + "\n-------------------------\n";
+            String gotGPA = null;
+            gotGPA = "\n" + "credit hours: " + arg2 + 
+            "\n" + "-------------------------\n GPA:" + arg1
+             + "\n-------------------------\n";
             //System.out.println("-------------------------");
             //System.out.printf("GPA: %3.2\n,");
             //System.out.printf("GPA: "+  gpa + "\n");
-            System.out.print(gotGPA + "\n");
-            Main.OutInfo(gotGPA + "\n");
+            //System.out.print(gotGPA + "\n");
+            return gotGPA;
     }
 
-    public static void printCoursesGR(Connection conn, String nNumber) throws SQLException  {
-        String courses =  "-------------------------\n"
-                        + "ENROLLMENTS\n"
-                        + "-------------------------\n";
-        String coursesQ = "SELECT course_num, sem, year, letter_grade, grade_point "
+    public static String printCoursesGR(Connection conn, String nNumber) throws SQLException  {
+        String courses = null;
+        courses =  "-------------------------\n"
+                    + "ENROLLMENTS\n"
+                    + "-------------------------\n";
+        String coursesQ = null;
+        coursesQ = "SELECT course_num, sem, year, letter_grade, grade_point "
         + "FROM course_section, enrolls_in "
         + "WHERE course_num=cnum AND nnum=?";
-            PreparedStatement stmt = conn.prepareStatement(coursesQ);
+            PreparedStatement stmt = null;
+            stmt = conn.prepareStatement(coursesQ);
             stmt.setString(1, nNumber);
             ResultSet rSet = stmt.executeQuery();
             while(rSet.next()){
@@ -217,22 +305,27 @@ public class Queries {
                     + rSet.getString(4) + " | "     //letter grade
                     + rSet.getString(5) + "\n";     //grade point
             }//while
-        System.out.print(courses);
-        Main.OutInfo(courses + "\n\n");
+        //System.out.print(courses);
+        return courses;
     }//printCoursesGR()
     
     public static void listCourses(Connection conn, String dept) throws SQLException {
-        String listCoursesQ = "SELECT Course_name, Course_number "
+        try {
+            try {
+        String listCoursesQ = null;
+        listCoursesQ = "SELECT Course_name, Course_number "
         + "FROM DEPARTMENT D, COURSE C "
         + "WHERE D.Dept_code=C.Course_dept "
         + "AND (D.Dept_name=? OR D.Dept_code=?)";
-            PreparedStatement getCourses = conn.prepareStatement(listCoursesQ);
+            PreparedStatement getCourses = null;
+            getCourses = conn.prepareStatement(listCoursesQ);
             getCourses.setString(1, dept);
             getCourses.setString(2, dept);
             ResultSet courses = getCourses.executeQuery();
-            String cName;
-            String cNum;
-            String courseResults = 
+            String cName = null;
+            String cNum = null;
+            String courseResults = null;
+            courseResults =
               "\nCourses for department " + dept + ":\n\n"
             + "Course#  |  Course Name\n"
             + "---------|-----------------------------------\n";
@@ -242,33 +335,19 @@ public class Queries {
                 cNum = courses.getString("Course_number");
                 courseResults += cNum + "  |  " + cName + "\n";
             }//while()
-
+            
             System.out.print(courseResults);
             Main.OutInfo(courseResults);
+            } catch(NumberFormatException e) {
+                e.printStackTrace();
+                Main.homMesAdd = "NumberFormatException, check terminal for details.";
+                UI.messOut.setText(Main.homMesAdd);
+                Main.homeE();
+            }
+        } catch(IndexOutOfBoundsException e) {
+            Main.homMesAdd = "Invalid IndexOutOfBOundsException by oracle, returning home...";
+            UI.messOut.setText(Main.homMesAdd);
+            Main.homeE();
+        }
     }//listCourses()
-
-    /*public static String getString() {
-        try {
-            StringBuffer buffer = new StringBuffer();
-            int c = System.in.read();
-            while (c != '\n' && c != -1) {
-                buffer.append((char)c);
-                c = System.in.read();
-            }//while()
-            return buffer.toString().trim();
-        } catch (IOException e) {
-            return ""; 
-        }//try-catch
-    }//getString()
-    
-    public static int getInt() {
-        String s = getString();
-        return Integer.parseInt(s);
-    }//getInt()
-
-    public static double getDouble() {
-        String s = getString();
-        return Double.parseDouble(s);
-    }//getDouble()*/
-
 }

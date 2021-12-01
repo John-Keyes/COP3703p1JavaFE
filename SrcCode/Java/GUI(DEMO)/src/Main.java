@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 public class Main {
     static Connection conn;
+    static String homMesAdd = null;
     public static void main(String[] args) {
         UI.Startup();
         LoadJDBC(); 
@@ -65,13 +66,20 @@ public class Main {
 
     public static void QuerySelUser() throws SQLException {
         UI.ShowButtons();
-        UI.messOut.setText("This is the Home Page.");
+        String usual = "Home. \n";
+        if(homMesAdd == null) {
+            UI.messOut.setText(usual);
+        }
+        else {
+            String totalMess = usual + homMesAdd;
+            UI.messOut.setText(totalMess);
+        }
         UI.studButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent a) {
                 UI.HideButtons();
                 UI.home.setVisible(true);
                 homeB();
-                UI.messOut.setText("Add a Student.");
+                UI.messOut.setText("Add a Student, enter N/A if student does not have a minor");
                 UI.AddStudArgs();
                 UI.next.setVisible(true);
                 UI.next.addActionListener(new ActionListener() {
@@ -80,11 +88,11 @@ public class Main {
                         UI.AddMajnMinArgs();
                         UI.next.setVisible(false);
                         UI.submit.setVisible(true);
-                        try {
+                        try { //Bug with student
                             studSubmit();
                         }
                         catch(SQLException e) {
-                            UI.messOut.setText("Couldn't add student, check terminal for details.");
+                            UI.messOut.setText("Bug in Oracle triggers Index out of Bounds in \"addStudent\"");
                             e.printStackTrace();
                         }
                     }
@@ -100,13 +108,7 @@ public class Main {
                 UI.messOut.setText("Add a Department.");
                 UI.AddDepArgs();
                 UI.submit.setVisible(true);
-                //try {
-                    depSubmit();
-                /*}
-                catch(SQLException e) {
-                    UI.messOut.setText("Couldn't add department, check terminal for details.");
-                    e.printStackTrace();
-                }*/
+                depSubmit();
             }
         });
 
@@ -118,13 +120,7 @@ public class Main {
                 UI.messOut.setText("Add a Course.");
                 UI.AddCoArgs();
                 UI.submit.setVisible(true);
-                //try {
                     coSubmit();
-                /*}
-                catch(SQLException e) {
-                    UI.messOut.setText("Couldn't add course, check terminal for details.");
-                    e.printStackTrace();
-                }*/
             }
         });
 
@@ -136,13 +132,7 @@ public class Main {
                 UI.messOut.setText("Add a Course Section.");
                 UI.AddCsArgs();
                 UI.submit.setVisible(true);
-                //try {
                     csSubmit();
-                /*}
-                catch(SQLException e) {
-                    UI.messOut.setText("Couldn't add course section, check terminal for details.");
-                    e.printStackTrace();
-                }*/
             }
         });
         
@@ -201,15 +191,15 @@ public class Main {
     * The user will then enter each attribute separated by a comma.
     */
 
-    // This is the user input for adding a grade to an existing student.
+    // Submit "Insert Student" Queries.
 
     public static void studSubmit() throws SQLException {
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent stud) {
+                UI.HideStud2Args();
                 UI.messOut.setText("Submitted");
                 UI.submit.setVisible(false);
-                //getArgs();
-                String sParams[] = new String[18];
+                String sParams[] = new String[19];
                 UI.GetStudArgs(sParams);
                 try {
                     Queries.addStudent(conn, sParams);
@@ -222,12 +212,13 @@ public class Main {
             }
         });
     }
+    // Submit "Insert Department" Queries.
     public static void depSubmit() {
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent dep) {
                 UI.messOut.setText("Submitted");
                 UI.submit.setVisible(false);
-                String dParams[] = new String[5];
+                String dParams[] = new String[6];
                 UI.GetDepArgs(dParams);
                 try {
                     Queries.addDepartment(conn, dParams);
@@ -240,12 +231,13 @@ public class Main {
             }
         });
     }
+    // Submit "Insert Course" Queries.
     public static void coSubmit() {
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent co) {
                 UI.messOut.setText("Submitted");
                 UI.submit.setVisible(false);
-                String coParams[] = new String[5];
+                String coParams[] = new String[6];
                 UI.GetCoArgs(coParams);
                 try {
                     Queries.addCourse(conn, coParams);
@@ -258,13 +250,13 @@ public class Main {
             }
         });
     }
-
+    // Submit "Insert Course Section" Queries.
     public static void csSubmit() {
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent cs) {
                 UI.messOut.setText("Submitted");
                 UI.submit.setVisible(false);
-                String csParams[] = new String[5];
+                String csParams[] = new String[6];
                 UI.GetCsArgs(csParams);
                 try {
                     Queries.addSection(conn, csParams);
@@ -277,13 +269,13 @@ public class Main {
             }
         });
     }
-
-    public static void grSubmit() { //submitting grade report 
+// Submit "Select Grade Report" Queries.
+    public static void grSubmit() {  
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent gr) {
                 UI.messOut.setText("Submitted");
                 UI.submit.setVisible(false);
-                String grParam =UI.arg1.getText();
+                String grParam = UI.arg1.getText();
                 try {
                     Queries.getGradeReport(conn, grParam);
                 }
@@ -296,7 +288,9 @@ public class Main {
         });
     }
 
-    public static void fcSubmit() { //Finding course
+    // Submit queries to find courses.
+
+    public static void fcSubmit() { 
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent fc) {
                 UI.messOut.setText("Submitted");
@@ -313,13 +307,13 @@ public class Main {
             }
         });
     }
-
-    public static void agSubmit() { //Add Student Grade
+//Add Student Grade
+    public static void agSubmit() { 
         UI.submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ag) {
                 UI.messOut.setText("Submitted");
                 UI.submit.setVisible(false);
-                String agParams[] = new String[7];
+                String agParams[] = new String[8];
                 UI.GetAgArgs(agParams);
                 try {
                     Queries.addGrade(conn, agParams);
@@ -353,8 +347,24 @@ public class Main {
             }
         });
     }
+    //Emergency Home for Oracle Bug
+    public static void homeE() {
+        UI.ResetArgs();
+        UI.HideButtons();
+        UI.next.setVisible(false);
+        UI.home.setVisible(false);
+        UI.submit.setVisible(false);
+        UI.messOut.setVisible(true);
+        try {
+                QuerySelUser();
+            } catch (SQLException e) {
+                UI.messOut.setText("Could not reach the home page, see terminal for details.");
+                UI.home.setVisible(true);
+                e.printStackTrace();
+            }
+    }
 
-    //the output is shown from the generated Query
+    //the output is shown from the generated Query called by the submit button in one of the functions above.
 
     public static void OutInfo(String genMes) {
         UI.messOut.setVisible(false);
